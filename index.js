@@ -38,6 +38,9 @@ require('browserify-cryptojs/components/evpkdf');
 require('browserify-cryptojs/components/cipher-core');
 require('browserify-cryptojs/components/aes');
 
+var Web3 = require('web3');
+var web3 = new Web3();
+
 /**
 The Accounts constructor method. This method will construct the in browser Ethereum accounts manager.
 
