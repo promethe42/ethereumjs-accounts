@@ -38,9 +38,6 @@ require('browserify-cryptojs/components/evpkdf');
 require('browserify-cryptojs/components/cipher-core');
 require('browserify-cryptojs/components/aes');
 
-var Web3 = require('web3');
-var web3 = new Web3();
-
 /**
 The Accounts constructor method. This method will construct the in browser Ethereum accounts manager.
 
@@ -69,6 +66,10 @@ var Accounts = module.exports = function(options){
 
             return String(passphrase);
         }
+    	, web3: function() {
+    	    var Web3 = require('web3');
+    	    return new Web3();
+    	}()
     };
 
     // build options
@@ -97,7 +98,7 @@ Pad the given string with a prefix zero, if length is uneven.
 var formatHex = function(str){
     if(_.isUndefined(str))
         str = '00';
-    
+
     return String(str).length % 2 ? '0' + String(str) : String(str);
 };
 
@@ -621,7 +622,7 @@ Accounts.prototype.signTransaction = function(tx_params, callback) {
 
     // convert string private key to a Buffer Object
     var privateKey = new Buffer(account.private, 'hex');
-    
+
     function signTx(err){
         // init new transaction object, and sign the transaction
         var tx = new Tx(rawTx);
@@ -629,19 +630,19 @@ Accounts.prototype.signTransaction = function(tx_params, callback) {
 
         // Build a serialized hex version of the Tx
         var serializedTx = '0x' + tx.serialize().toString('hex');
-
+	console.log('serialized tx', err, serializedTx);
         // fire callback
         callback(err, serializedTx);
     };
-    
+
     // If the gas price is zero or null, get the gas price async
     if(rawTx.gasPrice == '00')
-        web3.eth.getGasPrice(function(err, result){
+        this.options.web3.eth.getGasPrice(function(err, result){
             if(err)
                 return signTx(err);
             else
                 rawTx.gasPrice = formatHex(ethUtil.stripHexPrefix(result));
-            
+
             signTx(null);
         });
     else
