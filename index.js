@@ -630,7 +630,7 @@ Accounts.prototype.signTransaction = function(tx_params, callback) {
 
         // Build a serialized hex version of the Tx
         var serializedTx = '0x' + tx.serialize().toString('hex');
-	console.log('serialized tx', err, serializedTx);
+        
         // fire callback
         callback(err, serializedTx);
     };
