@@ -27,7 +27,7 @@ Commands:
 
 if (typeof localStorage === "undefined" || localStorage === null) {
     var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
+    localStorage = new LocalStorage('/tmp');
 }
 
 var _ = require('underscore');
