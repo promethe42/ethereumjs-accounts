@@ -25,18 +25,28 @@ Commands:
     meteor install silentcicero:ethereumjs-accounts
 **/
 
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+}
+
 var _ = require('underscore');
 var Tx = require('ethereumjs-tx');
 var LocalStore = require('localstorejs');
 var BigNumber = require('bignumber.js');
 var JSZip = require("jszip");
 var FileSaver = require("node-safe-filesaver");
-global.CryptoJS = require('browserify-cryptojs');
-require('browserify-cryptojs/components/enc-base64');
-require('browserify-cryptojs/components/md5');
-require('browserify-cryptojs/components/evpkdf');
-require('browserify-cryptojs/components/cipher-core');
-require('browserify-cryptojs/components/aes');
+
+if (typeof window === "undefined") {
+    global.CryptoJS = require('crypto-js');
+} else {
+    global.CryptoJS = require('browserify-cryptojs');
+    require('browserify-cryptojs/components/enc-base64');
+    require('browserify-cryptojs/components/md5');
+    require('browserify-cryptojs/components/evpkdf');
+    require('browserify-cryptojs/components/cipher-core');
+    require('browserify-cryptojs/components/aes');
+}
 
 /**
 The Accounts constructor method. This method will construct the in browser Ethereum accounts manager.
@@ -161,6 +171,10 @@ Generate 16 random alpha numeric bytes.
 **/
 
 var randomBytes = function(length) {
+    if (typeof window === 'undefined') {
+      return require('randombytes')(length >> 1);
+    }
+
     var charset = "abcdef0123456789";
     var i;
     var result = "";
@@ -630,7 +644,7 @@ Accounts.prototype.signTransaction = function(tx_params, callback) {
 
         // Build a serialized hex version of the Tx
         var serializedTx = '0x' + tx.serialize().toString('hex');
-        
+
         // fire callback
         callback(err, serializedTx);
     };
