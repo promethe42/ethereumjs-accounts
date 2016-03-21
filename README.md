@@ -1,3 +1,7 @@
+# Warning: deprecated project!
+
+I'll leave this project here for History (at least for now). But it's deprecated and behaving erratically when used with the latest Ethereum releases. You should use the [eth-lightwallet](https://github.com/ConsenSys/eth-lightwallet) package instead.
+
 ## Synopsis
 
 A simple module for creating, managing and using Ethereum accounts in browser.
